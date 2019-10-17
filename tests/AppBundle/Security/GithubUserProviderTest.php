@@ -11,34 +11,44 @@ class GithubUserProviderTest extends TestCase
     private $client, $serializer, $streamedResponce, $responce;
     public function setUp()
     {
-        $this->client = $this->getMockBuilder('GuzzleHttp\Client')
+        $this->client = $this
+            ->getMockBuilder('GuzzleHttp\Client')
             ->disableOriginalConstructor()
             ->setMethods(['get'])
             ->getMock();
 
-        $this->serializer = $this->getMockBuilder('JMS\Serializer\Serializer')
+        $this->serializer = $this
+            ->getMockBuilder('JMS\Serializer\Serializer')
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->responce = $this->getMockBuilder('Psr\Http\Message\MessageInterface')
+        $this->responce = $this
+            ->getMockBuilder('Psr\Http\Message\MessageInterface')
             ->getMock();
 
-        $this->streamedResponce = $this->getMockBuilder('Psr\Http\Message\StreamInterface')
+        $this->streamedResponce = $this
+            ->getMockBuilder('Psr\Http\Message\StreamInterface')
             ->getMock();
     }
     public function testLoadUserByUsernameReturningAUser()
     {
 
-        $this->client->expects($this->once())->method('get')->willReturn($this->responce);
+        $this->client->expects($this->once())
+            ->method('get')
+            ->willReturn($this->responce);
 
-        $this->responce->expects($this->once())->method('getBody')->willReturn($this->streamedResponce);
+        $this->responce->expects($this->once())
+            ->method('getBody')
+            ->willReturn($this->streamedResponce);
 
         $userData = ['login' => 'a login',
             'name' => 'user name',
             'email' => 'adress@mail.com',
             'avatar_url' => 'url to the avatar',
             'html_url' => 'url to profile'];
-        $this->serializer->expects($this->once())->method('deserialize')->willReturn($userData);
+        $this->serializer->expects($this->once())
+            ->method('deserialize')
+            ->willReturn($userData);
 
         $githubUserProvider = new GithubUserProvider($this->client, $this->serializer);
         $user = $githubUserProvider->loadUserByUsername('an-acesse-token');
@@ -51,11 +61,17 @@ class GithubUserProviderTest extends TestCase
 
     public function testLoadUserByUsernameThrowingException()
     {
-        $this->client->expects($this->once())->method('get')->willReturn($this->responce);
+        $this->client->expects($this->once())
+            ->method('get')
+            ->willReturn($this->responce);
 
-        $this->responce->expects($this->once())->method('getBody')->willReturn($this->streamedResponce);
+        $this->responce->expects($this->once())
+            ->method('getBody')
+            ->willReturn($this->streamedResponce);
 
-        $this->serializer->expects($this->once())->method('deserialize')->willReturn([]);
+        $this->serializer->expects($this->once())
+            ->method('deserialize')
+            ->willReturn([]);
 
         $this->expectException('LogicException');
 
